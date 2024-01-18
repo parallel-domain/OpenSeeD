@@ -23,7 +23,9 @@ class BaseModel(nn.Module):
         torch.save(self.model.state_dict(), save_dir)
 
     def from_pretrained(self, load_dir):
-        state_dict = torch.load(load_dir, map_location='cpu')
+        # AnyPath:
+        with load_dir.open("rb") as f:
+            state_dict = torch.load(f, map_location='cpu')
         state_dict = align_and_update_state_dicts(self.model.state_dict(), state_dict)
         self.model.load_state_dict(state_dict, strict=False)
         return self
