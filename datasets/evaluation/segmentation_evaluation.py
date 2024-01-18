@@ -92,7 +92,7 @@ class SemSegEvaluator(DatasetEvaluator):
         """
         for input, output in zip(inputs, outputs):
             output = output["sem_seg"].argmax(dim=0).to(self._cpu_device)
-            pred = np.array(output, dtype=np.int)
+            pred = np.array(output, dtype=np.int32)
             
             with PathManager.open(self.input_file_to_gt_file[input["file_name"]], "rb") as f:
                 gt = load_semseg(f, self._semseg_loader) - self._class_offset

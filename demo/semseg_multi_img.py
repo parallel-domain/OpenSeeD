@@ -78,7 +78,7 @@ def main(args=None):
             "train",
             "motorcycle",
             "bicycle"]
-    stuff_colors = [random_color(rgb=True, maximum=255).astype(np.int).tolist() for _ in range(len(stuff_classes))]
+    stuff_colors = [random_color(rgb=True, maximum=255).astype(np.int32).tolist() for _ in range(len(stuff_classes))]
     stuff_dataset_id_to_contiguous_id = {x:x for x in range(len(stuff_classes))}
 
     MetadataCatalog.get("demo").set(
