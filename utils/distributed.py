@@ -1,14 +1,13 @@
 import os
-import time
-import torch
-import pickle
 import subprocess
+import time
 
-from mpi4py import MPI
+import torch
 import torch.distributed as dist
 
 
 def apply_distributed(opt):
+    from mpi4py import MPI
     if opt['rank'] == 0:
         hostname_cmd = ["hostname -I"]
         result = subprocess.check_output(hostname_cmd, shell=True)
