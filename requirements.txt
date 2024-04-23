@@ -7,7 +7,7 @@ scikit-learn
 pandas
 timm==0.4.12
 numpy==1.24.2
-detectron2 @ git+https://github.com/facebookresearch/detectron2.git#864913f0e57e87a75c8cc0c7d79ecbd774fc669b
+detectron2 @ git+https://github.com/facebookresearch/detectron2.git@864913f0e57e87a75c8cc0c7d79ecbd774fc669b
 einops
 fvcore
 transformers==4.19.2
