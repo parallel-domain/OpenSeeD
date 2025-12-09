@@ -16,7 +16,7 @@ ftfy
 regex
 nltk
 vision-datasets==0.2.2
-pycocotools==2.0.7
+pycocotools==2.0.10
 diffdist
 pyarrow
 cityscapesscripts
