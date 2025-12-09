@@ -3,7 +3,7 @@ opencv-python-headless==4.11.0.86
 pyyaml
 json_tricks
 yacs
-scikit-learn==1.4.0
+# scikit-learn==1.4.0
 pandas
 timm==0.4.12
 numpy>=2.1
