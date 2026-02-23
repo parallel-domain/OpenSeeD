@@ -7,6 +7,8 @@ from setuptools import find_packages
 import torch
 from torch.utils.cpp_extension import CUDA_HOME, CppExtension, CUDAExtension
 
+os.environ.setdefault("TORCH_CUDA_ARCH_LIST", "8.0;8.6;8.9;9.0;12.0+PTX")
+
 def get_deformable_attention_extensions():
     ops_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                            "openseed", "body", "encoder", "ops")
