@@ -1,30 +1,58 @@
+import os
+import glob
+
 import setuptools
 from setuptools import find_packages
-from setuptools.command.install import install
-import subprocess
-import sys
-import re
 
-# # groundingdino needs torch to be installed before it can be installed
-# # this is a hack but couldn't find any other way to make it work
-# try:
-#     import torch
-# except:
-#     subprocess.check_call([sys.executable, "-m", "pip", "install", 'torch'])
-# subprocess.call("python -m pip install detectron2 -f https://dl.fbaipublicfiles.com/detectron2/wheels/cu113/torch1.10/index.html", shell=True)
+import torch
+from torch.utils.cpp_extension import CUDA_HOME, CppExtension, CUDAExtension
 
-class InstallLocalPackage(install):
-    def run(self):
-        install.run(self)
-        subprocess.call(
-            "python openseed/body/encoder/ops/setup.py build install --user", shell=True
+def get_deformable_attention_extensions():
+    ops_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                           "openseed", "body", "encoder", "ops")
+    extensions_dir = os.path.join(ops_dir, "src")
+
+    main_file = glob.glob(os.path.join(extensions_dir, "*.cpp"))
+    source_cpu = glob.glob(os.path.join(extensions_dir, "cpu", "*.cpp"))
+    source_cuda = glob.glob(os.path.join(extensions_dir, "cuda", "*.cu"))
+
+    sources = main_file + source_cpu
+    extension = CppExtension
+    extra_compile_args = {"cxx": []}
+    define_macros = []
+
+    if (os.environ.get('FORCE_CUDA') or torch.cuda.is_available()) and CUDA_HOME is not None:
+        extension = CUDAExtension
+        sources += source_cuda
+        define_macros += [("WITH_CUDA", None)]
+        extra_compile_args["nvcc"] = [
+            "-DCUDA_HAS_FP16=1",
+            "-D__CUDA_NO_HALF_OPERATORS__",
+            "-D__CUDA_NO_HALF_CONVERSIONS__",
+            "-D__CUDA_NO_HALF2_OPERATORS__",
+        ]
+    else:
+        if CUDA_HOME is None:
+            raise NotImplementedError('CUDA_HOME is None. Please set environment variable CUDA_HOME.')
+        else:
+            raise NotImplementedError('No CUDA runtime is found. Please set FORCE_CUDA=1 or test it by running torch.cuda.is_available().')
+
+    include_dirs = [extensions_dir]
+    return [
+        extension(
+            "MultiScaleDeformableAttention",
+            sources,
+            include_dirs=include_dirs,
+            define_macros=define_macros,
+            extra_compile_args=extra_compile_args,
         )
+    ]
 
 with open("requirements.txt", "r") as fh:
     install_requires = fh.read().split('\n')
 
 setuptools.setup(
-    name="OpenSeeD", 
+    name="OpenSeeD",
     version="0.1.0",
     author="Zhang, Hao and Li, Feng and Zou, Xueyan and Liu, Shilong and Li, Chunyuan and Gao, Jianfeng and Yang, Jianwei and Zhang, Lei",
     author_email="{hzhangcx, fliay}@connect.ust.hk",
@@ -32,9 +60,10 @@ setuptools.setup(
     url="https://github.com/parallel-domain/OpenSeeD",
     install_requires=install_requires,
     packages=find_packages(),
+    ext_modules=get_deformable_attention_extensions(),
+    cmdclass={"build_ext": torch.utils.cpp_extension.BuildExtension},
     extras_require={
         "dev": ["flake8", "black==22.3.0", "isort", "twine", "pytest", "wheel"],
     },
     python_requires=">=3.8",
-    cmdclass={'install':InstallLocalPackage},
 )
