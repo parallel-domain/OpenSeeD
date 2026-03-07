@@ -1,0 +1,19 @@
+[workspace]
+name = "openseed-wheel-builder"
+version = "0.1.0"
+description = "Build environment for the openseed CUDA wheel"
+channels = ["https://prefix.dev/conda-forge", "pytorch", "nvidia"]
+platforms = ["linux-64"]
+
+[system-requirements]
+cuda = "13.0"
+libc = { family="glibc", version="2.31" }
+
+[dependencies]
+python = "==3.11.11"
+setuptools = "<=78.0.0"
+pytorch-gpu = "==2.9.1"
+cuda-version = ">=12.9.0"
+cuda-toolkit = ">=12.9"
+pip = "*"
+twine = "*"

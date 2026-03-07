@@ -55,7 +55,7 @@ with open("requirements.txt", "r") as fh:
 
 setuptools.setup(
     name="OpenSeeD",
-    version="0.1.0",
+    version="0.1.1",
     author="Zhang, Hao and Li, Feng and Zou, Xueyan and Liu, Shilong and Li, Chunyuan and Gao, Jianfeng and Yang, Jianwei and Zhang, Lei",
     author_email="{hzhangcx, fliay}@connect.ust.hk",
     description="A Simple Framework for Open-Vocabulary Segmentation and Detection",

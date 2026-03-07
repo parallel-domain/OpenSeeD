@@ -7,7 +7,7 @@ yacs
 pandas
 timm==0.4.12
 numpy>=2.1
-detectron2 @ https://pypi.internal.paralleldomain.com/packages/detectron2-0.6-cp311-cp311-linux_x86_64.whl
+detectron2 @ https://pypi.internal.paralleldomain.com/packages/detectron2-0.6+cu129-cp311-cp311-linux_x86_64.whl
 einops
 fvcore
 transformers==4.40.0
